@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="ideas.png" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KnowledgeGrid</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="flex items-center justify-center p-4 md:p-8">
+
+    <div id="app-container" class="w-full max-w-lg bg-card-bg rounded-lg shadow-md p-6 md:p-10 border border-primary">
+
+        <!-- Header - Visible on most screens -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-primary flex items-center justify-center space-x-2">
+                <span>KnowledgeGrid</span>
+            </h1>
+            <p id="auth-status" class="text-sm mt-2 text-gray-500"></p>
+        </header>
+
+        <!-- 1. AUTH SCREEN (Updated for Login/Signup) -->
+        <div id="auth-screen" class="screen">
+            <h2 id="auth-title" class="text-2xl font-semibold mb-6 text-center text-text-color">Login to Your Grid</h2>
+            <form id="auth-form" class="space-y-4">
+
+                <!-- New Email Field (Visible in Signup) -->
+                <div id="email-group" class="hidden">
+                    <label for="email" class="block text-sm font-medium mb-1">Email</label>
+                    <input type="email" id="email" name="email" class="input-style" placeholder="user@example.com">
+                </div>
+
+                <div>
+                    <label for="username" class="block text-sm font-medium mb-1">Username</label>
+                    <input type="text" id="username" name="username" class="input-style"
+                        placeholder="Enter your username" required>
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium mb-1">Password</label>
+                    <input type="password" id="password" name="password" class="input-style" placeholder="********"
+                        required>
+                </div>
+
+                <!-- New Confirm Password Field (Visible in Signup) -->
+                <div id="confirm-password-group" class="hidden">
+                    <label for="confirm-password" class="block text-sm font-medium mb-1">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="confirm-password" class="input-style"
+                        placeholder="********">
+                </div>
+
+                <button type="submit" id="auth-button" class="btn-primary w-full p-3 font-semibold">Login</button>
+                <button type="button" id="switch-auth"
+                    class="w-full text-sm mt-3 text-primary hover:text-accent transition-colors">Don't have an account?
+                    Sign Up</button>
+            </form>
+            <p id="auth-message" class="text-center mt-4 text-sm font-medium text-accent"></p>
+        </div>
+
+        <!-- 2. CATEGORY SELECTION SCREEN -->
+        <div id="category-screen" class="screen hidden">
+            <h2 class="text-2xl font-semibold mb-6 text-center text-text-color">Select Your Tech Challenge</h2>
+            <div id="categories-container" class="grid grid-cols-2 gap-4">
+                <!-- Categories will be rendered here -->
+            </div>
+            <!-- Inline Profile Section (opens under categories when Profile button is clicked) -->
+            <div id="profile-inline" class="hidden mt-6 bg-card-bg p-4 rounded-lg border border-primary/30">
+                <div class="flex items-center space-x-4 mb-4">
+                    <img id="inline-profile-image-preview" src="https://via.placeholder.com/80?text=Avatar" alt="avatar"
+                        class="w-16 h-16 rounded-full object-cover border" />
+                    <div class="flex-1">
+                        <p class="font-semibold" id="inline-profile-username-display">Username</p>
+                        <p class="text-sm text-gray-600" id="inline-profile-email-display">email@example.com</p>
+                    </div>
+                </div>
+
+                <form id="inline-profile-form" class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Change Username</label>
+                        <input id="inline-profile-username" class="input-style" type="text" placeholder="New username"
+                            title="New username" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">New Password</label>
+                        <input id="inline-profile-password" class="input-style" type="password"
+                            placeholder="Leave empty to keep current" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Confirm Password</label>
+                        <input id="inline-profile-confirm-password" class="input-style" type="password"
+                            placeholder="Confirm new password" title="Confirm new password" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Profile Image</label>
+                        <input id="inline-profile-image-input" type="file" accept="image/*"
+                            title="Upload profile image" />
+                    </div>
+
+                    <div class="flex space-x-3">
+                        <button id="profile-inline-save" type="button" class="btn-primary p-3 font-semibold">Save
+                            Changes</button>
+                        <button id="profile-inline-close" type="button" class="p-3 border rounded-md">Close</button>
+                    </div>
+                </form>
+
+                <div class="mt-4">
+                    <h4 class="text-sm font-semibold mb-2">Past Scores</h4>
+                    <div id="inline-profile-scores-list" class="space-y-2 text-sm text-gray-700">
+                        <!-- Scores will be appended here -->
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 grid grid-cols-2 gap-3">
+                <button id="profile-button" class="btn-primary p-3 font-semibold flex items-center justify-center">
+                    <i class="fas fa-user-circle mr-2"></i> Profile
+                </button>
+                <button id="logout-button" class="text-sm text-gray-500 hover:text-accent transition-colors">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- 5. PROFILE SCREEN -->
+        <div id="profile-screen" class="screen hidden">
+            <h2 class="text-2xl font-semibold mb-6 text-center text-text-color">Your Profile</h2>
+
+            <div class="bg-card-bg p-4 rounded-lg mb-4">
+                <div class="flex items-center space-x-4">
+                    <img id="profile-image-preview" src="" alt="avatar"
+                        class="w-20 h-20 rounded-full object-cover border" />
+                    <div class="flex-1">
+                        <p class="font-semibold" id="profile-username-display">Username</p>
+                        <p class="text-sm text-gray-600" id="profile-email-display">email@example.com</p>
+                    </div>
+                </div>
+            </div>
+
+            <form id="profile-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Change Username</label>
+                    <input id="profile-username" class="input-style" type="text" placeholder="New username"
+                        title="New username" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">New Password</label>
+                    <input id="profile-password" class="input-style" type="password"
+                        placeholder="Leave empty to keep current" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Confirm Password</label>
+                    <input id="profile-confirm-password" class="input-style" type="password"
+                        placeholder="Confirm new password" title="Confirm new password" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Profile Image</label>
+                    <input id="profile-image-input" type="file" accept="image/*" title="Upload profile image" />
+                </div>
+
+                <div class="flex space-x-3">
+                    <button id="profile-save-button" type="button" class="btn-primary p-3 font-semibold">Save
+                        Changes</button>
+                    <button id="profile-back-button" type="button" class="p-3 border rounded-md">Back</button>
+                </div>
+            </form>
+
+            <div class="mt-6">
+                <h3 class="text-lg font-semibold mb-2">Past Scores</h3>
+                <div id="profile-scores-list" class="space-y-2 text-sm text-gray-700">
+                    <!-- Scores will be appended here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. QUIZ SCREEN -->
+        <div id="quiz-screen" class="screen hidden">
+            <!-- Loading Indicator -->
+            <div id="quiz-loading" class="text-center py-12 hidden">
+                <div class="loader inline-block w-12 h-12 border-4"></div>
+                <p class="mt-4 text-primary font-semibold">Generating questions...</p>
+                <p class="text-xs text-gray-500 mt-1">Sourced via Google Search grounding for accuracy.</p>
+            </div>
+
+            <!-- Quiz Content -->
+            <div id="quiz-content" class="hidden">
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <span id="q-index" class="text-lg font-bold text-primary">Question 1 of 20</span>
+                        <!-- Score placeholder for deferred scoring -->
+                        <span id="q-marks" class="text-sm font-medium text-gray-600">Progress: 0 / 20</span>
+                    </div>
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="progress-bar-fill" class="h-2 rounded-full bg-primary"></div>
+                    </div>
+                </div>
+
+                <h3 id="question-text" class="text-xl font-semibold mb-6 min-h-[50px]"></h3>
+
+                <div id="options-container" class="space-y-3">
+                    <!-- Options will be rendered here -->
+                </div>
+
+                <div class="flex justify-between mt-8 space-x-4">
+                    <button id="next-button" class="btn-primary w-full p-3 font-semibold opacity-50 cursor-not-allowed"
+                        disabled>
+                        Next Question <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button id="submit-button" class="btn-primary w-full p-3 font-semibold hidden" disabled>
+                        Submit Quiz <i class="fas fa-check-circle"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- In-quiz message box for warnings/errors -->
+            <div id="quiz-message-box"
+                class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center hidden">
+                <div class="bg-white p-8 rounded-lg shadow-xl max-w-sm text-center border-4 border-accent">
+                    <i class="fas fa-exclamation-triangle text-accent text-4xl mb-4"></i>
+                    <h4 class="text-xl font-bold mb-3">Security Alert!</h4>
+                    <p id="quiz-message-text" class="text-gray-700">Do not attempt to switch tabs or exit fullscreen
+                        during the exam.</p>
+                    <button onclick="resumeQuiz()" class="btn-primary mt-6 p-2 px-4 font-semibold">I Understand</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. RESULT SCREEN -->
+        <div id="result-screen" class="screen hidden text-center">
+            <h2 class="text-3xl font-bold mb-4 text-primary">Assessment Complete!</h2>
+            <div class="bg-card-bg p-6 rounded-lg border border-primary/50 shadow-inner mb-6">
+                <p class="text-lg font-semibold text-gray-600">Your Final Score</p>
+                <p id="final-score" class="text-6xl font-extrabold text-accent mt-2">0/20</p>
+            </div>
+
+            <div class="space-y-3 mb-8">
+                <div class="flex justify-between items-center text-lg">
+                    <span class="font-medium text-text-color"><i class="fas fa-check-circle text-green-600"></i> Correct
+                        Answers:</span>
+                    <span id="correct-count" class="font-bold text-green-600">0</span>
+                </div>
+                <div class="flex justify-between items-center text-lg">
+                    <span class="font-medium text-text-color"><i class="fas fa-times-circle text-accent"></i> Incorrect
+                        Answers:</span>
+                    <span id="incorrect-count" class="font-bold text-accent">0</span>
+                </div>
+            </div>
+
+            <button onclick="showScreen('category-screen')" class="btn-primary p-3 font-semibold">
+                <i class="fas fa-redo"></i> Try Another Grid
+            </button>
+        </div>
+
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
